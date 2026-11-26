@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.OptionalDynamic;
 import com.pengin0503.stopwatchboard.core.BoardDefinition;
 import com.pengin0503.stopwatchboard.core.BoardId;
 import com.pengin0503.stopwatchboard.core.BoardStore;
@@ -36,13 +37,19 @@ public final class StopwatchSavedData extends SavedData {
     );
 
     private final BoardStore store;
+    private final Dynamic<Tag> preservedRoot;
 
     public StopwatchSavedData() {
         this(new BoardStore());
     }
 
     private StopwatchSavedData(BoardStore store) {
+        this(store, null);
+    }
+
+    private StopwatchSavedData(BoardStore store, Dynamic<Tag> preservedRoot) {
         this.store = store;
+        this.preservedRoot = preservedRoot;
     }
 
     public BoardStore store() {
@@ -51,9 +58,14 @@ public final class StopwatchSavedData extends SavedData {
 
     private static <T> StopwatchSavedData fromDynamic(Dynamic<T> root) {
         BoardStore store = new BoardStore();
-        Optional<List<Dynamic<T>>> maybeBoards = root.get("boards").asListOpt(Function.identity()).result();
-        if (maybeBoards.isEmpty()) {
+        OptionalDynamic<T> boardsField = root.get("boards");
+        if (boardsField.result().isEmpty()) {
             return new StopwatchSavedData(store);
+        }
+        Optional<List<Dynamic<T>>> maybeBoards = boardsField.asListOpt(Function.identity()).result();
+        if (maybeBoards.isEmpty()) {
+            LOGGER.error("[StopwatchBoard] Could not read 'boards' from saved data: expected a list; preserving the original data until a board is added");
+            return new StopwatchSavedData(store, root.convert(NbtOps.INSTANCE));
         }
 
         for (Dynamic<T> boardDyn : maybeBoards.get()) {
@@ -66,14 +78,28 @@ public final class StopwatchSavedData extends SavedData {
                 String id = idOpt.get();
                 String displayName = boardDyn.get("displayName").asString().result().orElse(id);
                 String createdBy = boardDyn.get("createdBy").asString().result().orElse("Server");
-                long createdAt = boardDyn.get("createdAt").asNumber().result().map(Number::longValue).orElse(0L);
+                OptionalDynamic<T> createdAtField = boardDyn.get("createdAt");
+                long createdAt = 0L;
+                if (createdAtField.result().isPresent()) {
+                    Optional<Number> parsedCreatedAt = createdAtField.asNumber().result();
+                    if (parsedCreatedAt.isPresent()) {
+                        createdAt = parsedCreatedAt.get().longValue();
+                    } else {
+                        LOGGER.warn("[StopwatchBoard] Corrupt 'createdAt' on board '{}': expected a number, using 0", id);
+                    }
+                }
 
                 store.putLoadedBoard(new BoardDefinition(id, displayName, createdBy, createdAt));
 
-                Optional<List<Dynamic<T>>> maybePbs = boardDyn.get("pbs").asListOpt(Function.identity()).result();
-                if (maybePbs.isPresent()) {
-                    for (Dynamic<T> pbDyn : maybePbs.get()) {
-                        parsePersonalBest(id, pbDyn).ifPresent(pb -> store.putLoadedPersonalBest(id, pb));
+                OptionalDynamic<T> pbsField = boardDyn.get("pbs");
+                if (pbsField.result().isPresent()) {
+                    Optional<List<Dynamic<T>>> maybePbs = pbsField.asListOpt(Function.identity()).result();
+                    if (maybePbs.isEmpty()) {
+                        LOGGER.warn("[StopwatchBoard] Could not read 'pbs' on board '{}': expected a list; skipping its personal bests", id);
+                    } else {
+                        for (Dynamic<T> pbDyn : maybePbs.get()) {
+                            parsePersonalBest(id, pbDyn).ifPresent(pb -> store.putLoadedPersonalBest(id, pb));
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -100,7 +126,18 @@ public final class StopwatchSavedData extends SavedData {
                 return Optional.empty();
             }
             long totalMs = totalNum.get().longValue();
-            long achievedAt = pbDyn.get("achievedAt").asNumber().result().map(Number::longValue).orElse(0L);
+            OptionalDynamic<T> achievedAtField = pbDyn.get("achievedAt");
+            long achievedAt = 0L;
+            if (achievedAtField.result().isPresent()) {
+                Optional<Number> parsedAchievedAt = achievedAtField.asNumber().result();
+                if (parsedAchievedAt.isPresent()) {
+                    achievedAt = parsedAchievedAt.get().longValue();
+                } else {
+                    // A corrupt timestamp must not win leaderboard ties against valid records.
+                    LOGGER.warn("[StopwatchBoard] Corrupt 'achievedAt' on board '{}' for {}: expected a number, using Long.MAX_VALUE", boardId, playerId);
+                    achievedAt = Long.MAX_VALUE;
+                }
+            }
 
             List<Long> splits = new ArrayList<>();
             Optional<List<Dynamic<T>>> maybeSplits = pbDyn.get("splitsMs").asListOpt(Function.identity()).result();
@@ -123,6 +160,9 @@ public final class StopwatchSavedData extends SavedData {
     }
 
     private Dynamic<Tag> toDynamic() {
+        if (preservedRoot != null && store.snapshotBoards().isEmpty()) {
+            return preservedRoot;
+        }
         NbtOps ops = NbtOps.INSTANCE;
         Stream<Tag> boardTags = store.snapshotBoards().stream().map(board -> {
             Map<Tag, Tag> boardMap = new LinkedHashMap<>();
