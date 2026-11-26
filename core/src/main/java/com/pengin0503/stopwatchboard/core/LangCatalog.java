@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Loads bundled en_us and ja_jp language files from classpath resources so the server
@@ -18,6 +19,7 @@ import java.util.Map;
 public final class LangCatalog {
     private static final Gson GSON = new Gson();
     private static final Type MAP_TYPE = new TypeToken<Map<String, String>>() {}.getType();
+    private static final Logger LOGGER = Logger.getLogger(LangCatalog.class.getName());
 
     private final Map<String, String> enUs;
     private final Map<String, String> jaJp;
@@ -43,6 +45,7 @@ public final class LangCatalog {
                 return parsed == null ? Map.of() : parsed;
             }
         } catch (Exception e) {
+            LOGGER.warning("[StopwatchBoard] Failed to load language resource '" + path + "': " + e.getMessage());
             return Map.of();
         }
     }
