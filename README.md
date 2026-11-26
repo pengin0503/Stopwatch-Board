@@ -87,4 +87,6 @@ Stopwatch Board brings per-player splits, personal bests, and per-board leaderbo
 
 ## License
 
-MIT
+Custom License (All Rights Reserved) — see [LICENSE](LICENSE) for the full terms.
+
+Personal use and free modpack inclusion (with credit and a link to an official page) are allowed. Redistribution, re-uploading, selling, and distributing modified versions require the author's permission.
