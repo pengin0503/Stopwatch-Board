@@ -1,0 +1,48 @@
+{
+  "stopwatchboard.error.player_only": "This command can only be used by a player.",
+  "stopwatchboard.error.board_not_found": "Board '%s' does not exist.",
+  "stopwatchboard.error.invalid_board_id": "Invalid board ID '%s'. Use lowercase letters, digits, '_' or '-', starting with a letter or digit (max 32 characters).",
+  "stopwatchboard.error.board_already_exists": "Board '%s' already exists.",
+  "stopwatchboard.error.already_running": "You already have an active run on '%s'. Use /swb cancel or /swb finish first.",
+  "stopwatchboard.error.no_active_run": "You do not have an active run.",
+  "stopwatchboard.error.max_splits_reached": "Maximum splits per run (%s) reached.",
+  "stopwatchboard.error.invalid_page": "Invalid page %s. Valid pages: 1 to %s.",
+  "stopwatchboard.error.pb_not_found_self": "You do not have a personal best on '%s' yet.",
+  "stopwatchboard.error.pb_not_found_other": "%s does not have a personal best on '%s'.",
+
+  "stopwatchboard.start.success": "Started run on %s.",
+  "stopwatchboard.split.delta": "Split #%s: %s (%s)",
+  "stopwatchboard.split.no_pb_split": "Split #%s: %s (no PB split)",
+  "stopwatchboard.split.no_pb": "Split #%s: %s (no PB yet)",
+  "stopwatchboard.finish.summary_with_delta": "Finished %s in %s (%s) — Rank #%s",
+  "stopwatchboard.finish.summary_first": "Finished %s in %s — Rank #%s",
+  "stopwatchboard.finish.new_pb": "New personal best!",
+  "stopwatchboard.finish.server_record_broadcast": "[Stopwatch Board] %s set a new server record on %s: %s!",
+  "stopwatchboard.cancel.success": "Cancelled active run on %s.",
+  "stopwatchboard.cancel.death": "Your active run on %s was cancelled because you died.",
+  "stopwatchboard.cancel.board_removed": "Your active run on %s was cancelled because the board was removed.",
+  "stopwatchboard.status.active": "Active run on %s — Elapsed: %s (Splits: %s)",
+  "stopwatchboard.status.none": "No active run.",
+  "stopwatchboard.actionbar.live": "%s | %s",
+
+  "stopwatchboard.boards.empty": "No boards have been created yet.",
+  "stopwatchboard.boards.header": "=== Stopwatch Boards ===",
+  "stopwatchboard.boards.entry": "- %s (%s) | Your PB: %s | Server Best: %s",
+  "stopwatchboard.boards.server_best_value": "%s (%s)",
+  "stopwatchboard.boards.none_value": "--",
+
+  "stopwatchboard.top.empty": "No records on '%s' yet.",
+  "stopwatchboard.top.header": "=== Top: %s (Page %s/%s) ===",
+  "stopwatchboard.top.entry": "#%s %s — %s (%s)",
+
+  "stopwatchboard.pb.header": "PB for %s on %s: %s (%s)",
+  "stopwatchboard.pb.no_splits": "No splits recorded.",
+  "stopwatchboard.pb.split_entry": "  Split #%s: %s",
+
+  "stopwatchboard.board.create.success": "Created board '%s' (%s).",
+  "stopwatchboard.board.remove.success": "Removed board '%s' and all its records.",
+  "stopwatchboard.board.reset.success": "Reset all records on board '%s'.",
+  "stopwatchboard.board.list.empty": "No boards exist.",
+  "stopwatchboard.board.list.header": "=== Boards (%s) ===",
+  "stopwatchboard.board.list.entry": "- %s (%s) — %s PB(s)"
+}

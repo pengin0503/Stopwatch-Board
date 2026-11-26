@@ -1,0 +1,27 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDEs
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.classpath
+.project
+.settings/
+bin/
+.vscode/
+
+# Minecraft run directories
+run/
+**/run/
+run-data/
+**/run-data/
+
+# OS
+.DS_Store
+Thumbs.db

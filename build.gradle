@@ -1,0 +1,9 @@
+plugins {
+    id 'net.neoforged.moddev' version "${moddev_version}" apply false
+}
+
+tasks.register('buildAll') {
+    group = 'build'
+    description = 'Runs unit tests and builds all target Minecraft versions.'
+    dependsOn ':core:test', ':mc-1.21.11:build', ':mc-26.1.2:build', ':mc-26.2:build', ':mc-26.3:build'
+}

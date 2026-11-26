@@ -1,0 +1,48 @@
+{
+  "stopwatchboard.error.player_only": "このコマンドはプレイヤーのみ実行できます。",
+  "stopwatchboard.error.board_not_found": "ボード '%s' は存在しません。",
+  "stopwatchboard.error.invalid_board_id": "ボード ID '%s' が不正です。小文字英数字で始まり、小文字英数字・'_'・'-' のみ（最大32文字）にしてください。",
+  "stopwatchboard.error.board_already_exists": "ボード '%s' は既に存在します。",
+  "stopwatchboard.error.already_running": "既に '%s' で計測中です。先に /swb cancel または /swb finish を実行してください。",
+  "stopwatchboard.error.no_active_run": "進行中のランがありません。",
+  "stopwatchboard.error.max_splits_reached": "1ランあたりの最大スプリット数（%s）に達しました。",
+  "stopwatchboard.error.invalid_page": "ページ %s は範囲外です（1〜%s を指定してください）。",
+  "stopwatchboard.error.pb_not_found_self": "'%s' にはまだ自己ベストがありません。",
+  "stopwatchboard.error.pb_not_found_other": "%s は '%s' に自己ベストを持っていません。",
+
+  "stopwatchboard.start.success": "%s の計測を開始しました。",
+  "stopwatchboard.split.delta": "スプリット #%s: %s (%s)",
+  "stopwatchboard.split.no_pb_split": "スプリット #%s: %s (PB に該当スプリットなし)",
+  "stopwatchboard.split.no_pb": "スプリット #%s: %s (PB なし)",
+  "stopwatchboard.finish.summary_with_delta": "%s ゴール！ タイム: %s (%s) — %s位",
+  "stopwatchboard.finish.summary_first": "%s ゴール！ タイム: %s — %s位",
+  "stopwatchboard.finish.new_pb": "自己ベスト更新！",
+  "stopwatchboard.finish.server_record_broadcast": "[Stopwatch Board] %s が %s でサーバー新記録を達成しました: %s！",
+  "stopwatchboard.cancel.success": "%s の進行中ランを破棄しました。",
+  "stopwatchboard.cancel.death": "死亡したため %s のランが破棄されました。",
+  "stopwatchboard.cancel.board_removed": "ボードが削除されたため %s のランが破棄されました。",
+  "stopwatchboard.status.active": "計測中: %s — 経過: %s（スプリット数: %s）",
+  "stopwatchboard.status.none": "進行中のランはありません。",
+  "stopwatchboard.actionbar.live": "%s | %s",
+
+  "stopwatchboard.boards.empty": "ボードはまだ作成されていません。",
+  "stopwatchboard.boards.header": "=== Stopwatch Boards ===",
+  "stopwatchboard.boards.entry": "- %s (%s) | 自分のPB: %s | サーバーベスト: %s",
+  "stopwatchboard.boards.server_best_value": "%s (%s)",
+  "stopwatchboard.boards.none_value": "--",
+
+  "stopwatchboard.top.empty": "'%s' にはまだ記録がありません。",
+  "stopwatchboard.top.header": "=== ランキング: %s（%s/%s ページ） ===",
+  "stopwatchboard.top.entry": "%s位 %s — %s (%s)",
+
+  "stopwatchboard.pb.header": "%s の %s 自己ベスト: %s (%s)",
+  "stopwatchboard.pb.no_splits": "スプリット記録はありません。",
+  "stopwatchboard.pb.split_entry": "  スプリット #%s: %s",
+
+  "stopwatchboard.board.create.success": "ボード '%s'（%s）を作成しました。",
+  "stopwatchboard.board.remove.success": "ボード '%s' とすべての記録を削除しました。",
+  "stopwatchboard.board.reset.success": "ボード '%s' の記録をすべてリセットしました。",
+  "stopwatchboard.board.list.empty": "ボードはありません。",
+  "stopwatchboard.board.list.header": "=== ボード一覧（%s件） ===",
+  "stopwatchboard.board.list.entry": "- %s（%s）— %s件のPB"
+}

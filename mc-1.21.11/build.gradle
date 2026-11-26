@@ -1,0 +1,10 @@
+ext {
+    neoVersion = rootProject.neo_1_21_11_version
+    javaVersion = 21
+    platformSourceDir = 'neoforge-1.21.11'
+    mcVersionRange = '[1.21.11]'
+    neoVersionRange = "[${rootProject.neo_1_21_11_version},)"
+    jarSuffix = 'mc1.21.11-neoforge'
+}
+
+apply from: rootProject.file('gradle/neoforge-module.gradle')

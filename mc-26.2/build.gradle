@@ -1,0 +1,11 @@
+// Verification build against Minecraft 26.2 / NeoForge 26.2.0.95 using the exact same neoforge-26x sources.
+ext {
+    neoVersion = rootProject.neo_26_2_version
+    javaVersion = 25
+    platformSourceDir = 'neoforge-26x'
+    mcVersionRange = '[26.2]'
+    neoVersionRange = "[${rootProject.neo_26_2_version},)"
+    jarSuffix = 'mc26.2-neoforge'
+}
+
+apply from: rootProject.file('gradle/neoforge-module.gradle')

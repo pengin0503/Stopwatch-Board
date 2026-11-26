@@ -1,0 +1,81 @@
+apply plugin: 'java-library'
+apply plugin: 'net.neoforged.moddev'
+
+group = rootProject.mod_group_id
+version = "${rootProject.mod_version}+${project.ext.jarSuffix}"
+
+base {
+    archivesName = rootProject.mod_id
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(project.ext.javaVersion as int)
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir rootProject.file('neoforge-common/src/main/java')
+            srcDir rootProject.file("${project.ext.platformSourceDir}/src/main/java")
+        }
+        resources {
+            srcDir rootProject.file('neoforge-common/src/main/resources')
+        }
+    }
+}
+
+neoForge {
+    version = project.ext.neoVersion
+
+    runs {
+        server {
+            server()
+            programArgument '--nogui'
+        }
+        configureEach {
+            logLevel = org.slf4j.event.Level.INFO
+        }
+    }
+
+    mods {
+        "${rootProject.mod_id}" {
+            sourceSet(sourceSets.main)
+            sourceSet(project(':core').sourceSets.main)
+        }
+    }
+}
+
+dependencies {
+    implementation project(':core')
+}
+
+def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
+    def replaceProperties = [
+            mod_id                 : rootProject.mod_id,
+            mod_name               : rootProject.mod_name,
+            mod_license            : rootProject.mod_license,
+            mod_version            : rootProject.mod_version,
+            mod_authors            : rootProject.mod_authors,
+            mod_description        : rootProject.mod_description,
+            neo_version_range      : project.ext.neoVersionRange,
+            minecraft_version_range: project.ext.mcVersionRange
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from rootProject.file('neoforge-common/src/main/templates')
+    into layout.buildDirectory.dir('generated/sources/modMetadata')
+}
+
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('jar', Jar).configure {
+    from(project(':core').sourceSets.main.output)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

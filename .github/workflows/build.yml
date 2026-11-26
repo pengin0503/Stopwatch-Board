@@ -1,0 +1,67 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-core:
+    name: Core Unit Tests (Java 21)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Run core JUnit 5 tests
+        run: ./gradlew :core:test --no-daemon
+
+  build-neoforge:
+    name: Build MC ${{ matrix.mc }}
+    needs: test-core
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mc: "1.21.11"
+            module: "mc-1.21.11"
+            java: 21
+            upload_jar: true
+          - mc: "26.1.2 (Universal 26.x)"
+            module: "mc-26.1.2"
+            java: 25
+            upload_jar: true
+          - mc: "26.2 (Compat Check)"
+            module: "mc-26.2"
+            java: 25
+            upload_jar: false
+          - mc: "26.3 (Compat Check)"
+            module: "mc-26.3"
+            java: 25
+            upload_jar: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: actions/setup-java@v4
+        if: matrix.java == 25
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build and test ${{ matrix.module }}
+        run: ./gradlew :core:test :${{ matrix.module }}:build --no-daemon
+      - name: Upload mod JAR
+        if: matrix.upload_jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: stopwatchboard-${{ matrix.module }}
+          path: ${{ matrix.module }}/build/libs/*.jar

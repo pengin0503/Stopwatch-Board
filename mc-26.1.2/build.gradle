@@ -1,0 +1,11 @@
+// Universal 26.x jar compiled against 26.1.2 (lowest common 26.x target) covering 26.1.2, 26.2, and 26.3.
+ext {
+    neoVersion = rootProject.neo_26_1_2_version
+    javaVersion = 25
+    platformSourceDir = 'neoforge-26x'
+    mcVersionRange = '[26.1.2,26.4)'
+    neoVersionRange = "[${rootProject.neo_26_1_2_version},)"
+    jarSuffix = 'mc26.1.2-26.3-neoforge'
+}
+
+apply from: rootProject.file('gradle/neoforge-module.gradle')
